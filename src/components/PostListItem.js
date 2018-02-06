@@ -1,10 +1,10 @@
 import React from 'react';
-import { Link } from 'react-ruoter-dom';
+import { Link } from 'react-router-dom';
 
-export const PostListItem = () => (
+export const PostListItem = ({title, id}) => (
     <div>
     <Link to={`/edit/${id}`}>
-        <h3>Title</h3>
+        <h3>{title}</h3>
     </ Link>
     </div>
 );
