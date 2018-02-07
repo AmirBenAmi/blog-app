@@ -1,16 +1,35 @@
-import database from 'firebase';
+import database from '../firebase/firebase';
 import uuid from 'uuid';
 
 //ADD POST
-export const addPost = ({title = 'title', note = '', createdAt = 0} = {}) => ({
+export const addPost = ({title = 'title', note = '', createdAt = 0, id = '0'} = {}) => ({
     type: 'ADD_POST',
     post: {
-        id: uuid(),
+        id,
         title,
         note,
         createdAt
     }
 });
+export const startAddPost = (postData = {}) => {
+    // database.ref().push('hey2');
+     return (dispatch, getState) => {
+        const uid = getState().auth.uid;
+        const {
+            title = 'title', 
+            note = '', 
+            createdAt = 0
+        } = postData;
+        const post = {title, note, createdAt};
+        return database.ref(`users/${uid}/posts`).push(post).then((ref) => {
+            dispatch(addPost({
+                id: ref.key,
+                ...post
+            }));
+        }).catch((e) => console.log(e));
+    };
+};
+
 //SET POST
 export const setPosts = (posts) => ({
     type: 'SET_POSTS',

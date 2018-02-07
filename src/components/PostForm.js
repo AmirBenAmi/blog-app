@@ -1,5 +1,5 @@
 import React from 'react';
-
+import moment from 'moment';
 
 export class PostForm extends React.Component{
     constructor(props) {
@@ -11,7 +11,7 @@ export class PostForm extends React.Component{
             id: props.post ? props.post.id : '1',
             title: props.post ? props.post.title : '',
             note: props.post ? props.post.note : '',
-            createdAt: props.post ? props.post.createdAt : 0,
+            createdAt: props.post ? moment(props.post.createdAt) : moment(),
             error: ''
         }
       }
