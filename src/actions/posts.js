@@ -2,17 +2,12 @@ import database from '../firebase/firebase';
 import uuid from 'uuid';
 
 //ADD POST
-export const addPost = ({title = 'title', note = '', createdAt = 0, id = '0'} = {}) => ({
+export const addPost = (post) => ({
     type: 'ADD_POST',
-    post: {
-        id,
-        title,
-        note,
-        createdAt
-    }
+    post
 });
 export const startAddPost = (postData = {}) => {
-    // database.ref().push('hey2');
+
      return (dispatch, getState) => {
         const uid = getState().auth.uid;
         const {
@@ -37,10 +32,25 @@ export const setPosts = (posts) => ({
 });
 
 export const startSetPosts = () => {
-    return (dispatch) => {
-        const posts = [{id: '1', title:'testTitle', note:'this is the first note of many', createdAt: 0}];
+
+return (dispatch, getState) => {
+    const uid = getState().auth.uid;
+    return database.ref(`users/${uid}/posts`).once('value').then((snapshot) => {
+        const posts = [];
+        snapshot.forEach((childSnapShot) => {
+            posts.push({
+                id: childSnapShot.key,
+                ...childSnapShot.val()
+            });
+        });
         dispatch(setPosts(posts));
-    }
+    });
+};
+
+    // return (dispatch) => {
+    //     const posts = [{id: '1', title:'testTitle', note:'this is the first note of many', createdAt: 0}];
+    //     dispatch(setPosts(posts));
+    // }
 };
 //EDIT POST
 export const editPost = (id, updates) => ({
@@ -51,20 +61,23 @@ export const editPost = (id, updates) => ({
 
 export const startEditPost = (id, updates) => {
     return (dispatch, getState) => {
-        return dispatch(editPost(id, updates))
+        const uid = getState().auth.uid;
+        return database.ref(`users/${uid}/posts/${id}`).update(updates).then(()=> {
+            dispatch(editPost(id, updates));
+        });
     }
-}
+};
 
+export const removePost = (id) => ({
+    type: 'REMOVE_POST',
+    id
+});
 
-
-
-
-// export const  startAddPost = () => {
-//     return (dispatch) => {
-//         const {
-//             title = '',
-//             note = '',
-//             createdAt = 0
-//         }
-//     }
-// };
+export const startRemovePost = (id) => {
+    return (dispatch, getState) => {
+        const uid = getState().auth.uid;
+        return database.ref(`users/${uid}/posts/${id}`).remove().then(() => {
+            dispatch(removePost(id));
+        });
+    };
+};

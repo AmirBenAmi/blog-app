@@ -25,7 +25,7 @@ export class PostForm extends React.Component{
                 id: this.state.id,
                 title: this.state.title,
                 note: this.state.note,
-                createdAt: this.state.createdAt
+                createdAt: this.state.createdAt.valueOf()
               });
 
           }

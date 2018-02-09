@@ -19,7 +19,9 @@ export default (state = postsDefaultState, action) => {
                 } else {
                     return post;
                 }
-            })
+            });
+        case 'REMOVE_POST':
+            return state.filter((post) => post.id !== action.id);
         default:
             return state;
     }
