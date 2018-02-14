@@ -1,16 +1,28 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { setTextFilter, sortByDate, sortByTitle } from '../actions/filters';
 
 
 
-export class PostListFilters extends React.Component {
+class PostListFilters extends React.Component {
+    onTextChange = (e) => {
+        this.props.setTextFilter(e.target.value);
+      };
+    onSortChange = (e) => {
+        if(e.target.value === 'title'){
+            this.props.sortByTitle();
+        } else {
+            this.props.sortByDate();
+        }
+    };
     render(){
         return (
             <div>
                 <input type="text"
                 placeholder="Search posts"
                 value={this.props.filters.text}
-                onChange={this.onChange}
+                onChange={this.onTextChange}
                 />
                 <select 
                 value={this.props.filters.sortBy}
@@ -19,7 +31,7 @@ export class PostListFilters extends React.Component {
                      <option value="title">By Title</option>
                     <option value="date">By Date</option>
                     </select>
-                <button> add </button>
+                <button><Link to='/create'>Add Post</Link></button>
             </div>
         )
     }
@@ -27,7 +39,7 @@ export class PostListFilters extends React.Component {
 
 const mapStateToProps = (state) => ({
     filters: state.filters
-});
+  });
 
 const mapDispatchToProps = (dispatch) => ({
     setTextFilter: (text) => dispatch(setTextFilter(text)),

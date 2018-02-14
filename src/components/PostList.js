@@ -1,6 +1,7 @@
 import  React from 'react';
 import { connect } from 'react-redux';
 import PostListItem from './PostListItem';
+import selectPosts from '../selectors/getvisible';
 
 export const PostList = (props) => (
                 <div>
@@ -17,7 +18,7 @@ export const PostList = (props) => (
 
 const mapStateToProps = (state) => {
     return {
-        posts: state.posts
+        posts: selectPosts(state.posts, state.filters)
     };
 };
 
